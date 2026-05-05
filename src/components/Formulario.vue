@@ -1,15 +1,66 @@
+<script setup lang="ts">
+    import { reactive, ref } from 'vue';
+import type { AlertProps } from './Alerta.vue';
+import Alerta from './Alerta.vue';
+
+    interface Form {
+        mascota:string, 
+        propietario:string, 
+        email:string, 
+        sintomas:string,
+        alta: string
+    }
+
+    const paciente = reactive<Form>({
+        mascota:'',
+        propietario:'',
+        alta: '', 
+        sintomas:'',
+        email:'',
+    })
+
+    const alerta = reactive<AlertProps>({
+            mensaje:"",
+            tipo:"error"
+    })
+
+    const showAlert = ref(false);
+
+    const handleSubmit = (event:SubmitEvent)=>{
+        
+        showAlert.value = true; 
+        if(Object.values(paciente).includes('')){
+           
+
+            alerta.mensaje = "Tienes un error en el formulario"
+            alerta.tipo = "error";
+            return;
+        }
+
+        alerta.tipo = "exito"; 
+        alerta.mensaje = "Todos los datos son correctos";
+
+    }
+</script>
+
+
 <template>
     <div class="md:w-1/2 text-center">
+
+        
+
         <h2 class="font-bold text-xl">Seguimiento pacientes</h2>
         <p class="mt-3">Añade Pacientes y <span class="text-indigo-600">Administralos</span></p>
 
-        <form action="" class="bg-white shadow-xl rounded-md mt-10 py-8 px-3">
-
+        <form @submit.prevent="handleSubmit" action="" class="bg-white shadow-xl rounded-md mt-10 py-8 px-3">
+            
+            <Alerta :mensaje="alerta.mensaje" :tipo="alerta.tipo" v-if="showAlert"/>
+            
             <div class="mb-5 flex flex-col gap-3">
                 <label for="mascota" class="text-slate-700 uppercase text-left font-bold">
                     Nombre mascota
                 </label>
-                <input placeholder="Nombre de la mascota" type="text" id="mascota" 
+                <input v-model="paciente.mascota"  placeholder="Nombre de la mascota" type="text" id="mascota" 
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400">
             </div>
 
@@ -17,7 +68,7 @@
                 <label for="propietario" class="text-slate-700 uppercase text-left font-bold">
                     Nombre del propietario
                 </label>
-                <input placeholder="Nombre del propietario" type="text" id="propietario" 
+                <input v-model="paciente.propietario" placeholder="Nombre del propietario" type="text" id="propietario" 
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400">
             </div>
 
@@ -25,7 +76,7 @@
                 <label for="email" class="text-slate-700 uppercase text-left font-bold">
                     Email
                 </label>
-                <input placeholder="Email del propietario" type="email" id="email" 
+                <input v-model="paciente.email" placeholder="Email del propietario" type="email" id="email" 
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400">
             </div>
 
@@ -33,7 +84,7 @@
                 <label for="alta" class="text-slate-700 uppercase text-left font-bold">
                     Alta
                 </label>
-                <input placeholder="Email del propietario" type="date" id="alta" 
+                <input v-model="paciente.alta" placeholder="Email del propietario" type="date" id="alta" 
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400">
             </div>
             
@@ -42,10 +93,12 @@
                     Síntomas
                 </label>
 
-                <textarea placeholder="Describe los sintomas" id="sintomas" 
+                <textarea  placeholder="Describe los sintomas" id="sintomas" 
+                v-model="paciente.sintomas"
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400 h-[200px]"></textarea>
             </div>
 
+            <input type="submit" class="bg-indigo-600 rounded-md p-2 w-full text-white hover:text-black hover:bg-indigo-600/70 hover:cursor-pointer transition-colors" value="Registrar">
             
 
 
@@ -54,6 +107,3 @@
 
 </template>
 
-<script setup lang="ts">
-
-</script>

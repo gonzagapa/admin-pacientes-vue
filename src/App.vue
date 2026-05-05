@@ -8,7 +8,7 @@ import Header from './components/Header.vue';
   <div class="mt-5 mx-auto container">
     <Header/>
 
-    <div class="md:flex mt-12">
+    <div class="md:flex mt-12 mb-10">
         <Formulario/>
     </div>
   </div>
