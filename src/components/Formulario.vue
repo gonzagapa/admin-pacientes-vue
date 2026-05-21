@@ -1,58 +1,30 @@
 <script setup lang="ts">
-    import { reactive, ref } from 'vue';
-import type { AlertProps } from './Alerta.vue';
-import Alerta from './Alerta.vue';
-
-    interface Form {
-        mascota:string, 
-        propietario:string, 
-        email:string, 
-        sintomas:string,
-        alta: string
+    import Alerta, { type AlertProps } from './Alerta.vue';
+    interface Props {
+        alerta:AlertProps, 
+        showAlert:boolean
     }
 
-    const paciente = reactive<Form>({
-        mascota:'',
-        propietario:'',
-        alta: '', 
-        sintomas:'',
-        email:'',
-    })
+    const props = defineProps<Props>();  
 
-    const alerta = reactive<AlertProps>({
-            mensaje:"",
-            tipo:"error"
-    })
+    const emit = defineEmits(['submit'])
 
-    const showAlert = ref(false);
+    const mascota = defineModel<string>("mascota"); 
+    const propietario = defineModel<string>("propietario"); 
+    const alta = defineModel<string>("alta"); 
+    const email = defineModel<string>("email"); 
+    const sintomas = defineModel<string>("sintomas");  
 
-    const handleSubmit = (event:SubmitEvent)=>{
-        
-        showAlert.value = true; 
-        if(Object.values(paciente).includes('')){
-           
 
-            alerta.mensaje = "Tienes un error en el formulario"
-            alerta.tipo = "error";
-            return;
-        }
-
-        alerta.tipo = "exito"; 
-        alerta.mensaje = "Todos los datos son correctos";
-
-    }
 </script>
 
 
 <template>
-    <div class="md:w-1/2 text-center">
-
-        
-
+    <div class="text-center">
         <h2 class="font-bold text-xl">Seguimiento pacientes</h2>
         <p class="mt-3">Añade Pacientes y <span class="text-indigo-600">Administralos</span></p>
 
-        <form @submit.prevent="handleSubmit" action="" class="bg-white shadow-xl rounded-md mt-10 py-8 px-3">
+        <form @submit.prevent="$emit('submit')" action="" class="bg-white shadow-xl rounded-md mt-10 py-8 px-3">
             
             <Alerta :mensaje="alerta.mensaje" :tipo="alerta.tipo" v-if="showAlert"/>
             
@@ -60,7 +32,7 @@ import Alerta from './Alerta.vue';
                 <label for="mascota" class="text-slate-700 uppercase text-left font-bold">
                     Nombre mascota
                 </label>
-                <input v-model="paciente.mascota"  placeholder="Nombre de la mascota" type="text" id="mascota" 
+                <input v-model="mascota"  placeholder="Nombre de la mascota" type="text" id="mascota" 
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400">
             </div>
 
@@ -68,7 +40,7 @@ import Alerta from './Alerta.vue';
                 <label for="propietario" class="text-slate-700 uppercase text-left font-bold">
                     Nombre del propietario
                 </label>
-                <input v-model="paciente.propietario" placeholder="Nombre del propietario" type="text" id="propietario" 
+                <input v-model="propietario" placeholder="Nombre del propietario" type="text" id="propietario" 
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400">
             </div>
 
@@ -76,7 +48,7 @@ import Alerta from './Alerta.vue';
                 <label for="email" class="text-slate-700 uppercase text-left font-bold">
                     Email
                 </label>
-                <input v-model="paciente.email" placeholder="Email del propietario" type="email" id="email" 
+                <input v-model="email" placeholder="Email del propietario" type="email" id="email" 
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400">
             </div>
 
@@ -84,7 +56,7 @@ import Alerta from './Alerta.vue';
                 <label for="alta" class="text-slate-700 uppercase text-left font-bold">
                     Alta
                 </label>
-                <input v-model="paciente.alta" placeholder="Email del propietario" type="date" id="alta" 
+                <input v-model="alta" placeholder="Email del propietario" type="date" id="alta" 
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400">
             </div>
             
@@ -93,8 +65,10 @@ import Alerta from './Alerta.vue';
                     Síntomas
                 </label>
 
-                <textarea  placeholder="Describe los sintomas" id="sintomas" 
-                v-model="paciente.sintomas"
+                <textarea  
+                placeholder="Describe los sintomas" 
+                id="sintomas" 
+                v-model="sintomas"
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400 h-[200px]"></textarea>
             </div>
 
