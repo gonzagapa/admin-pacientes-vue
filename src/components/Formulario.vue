@@ -2,7 +2,8 @@
     import Alerta, { type AlertProps } from './Alerta.vue';
     interface Props {
         alerta:AlertProps, 
-        showAlert:boolean
+        showAlert:boolean 
+        isEditing:boolean
     }
 
     const props = defineProps<Props>();  
@@ -72,7 +73,10 @@
                 class="border border-slate-400 rounded-md px-2 py-1 placeholder:text-slate-400 h-[200px]"></textarea>
             </div>
 
-            <input type="submit" class="bg-indigo-600 rounded-md p-2 w-full text-white hover:text-black hover:bg-indigo-600/70 hover:cursor-pointer transition-colors" value="Registrar">
+            <input type="submit" 
+            :value="isEditing ? 'Actualizar' : 'Registrar'"
+            :class="isEditing ? 'bg-indigo-700 hover:bg-indigo-600' : 'bg-indigo-600 hover:bg-indigo-700' "
+            class="rounded-md p-2 w-full text-white hover:text-black hover:bg-indigo-600/70 hover:cursor-pointer transition-colors">
             
 
 

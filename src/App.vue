@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import Formulario from './components/Formulario.vue';
 import Header from './components/Header.vue'; 
 import type { AlertProps } from './components/Alerta.vue';
@@ -23,7 +23,7 @@ import Pacientes from './components/Pacientes.vue';
             tipo:"error"
     }) 
 
-    const handleSubmit = (event:SubmitEvent)=>{
+    const handleSubmit = ()=>{
         
         showAlert.value = true; 
         const pacienteAux = { ...paciente, id: paciente.id || Date.now().toString() }; 
@@ -55,28 +55,33 @@ import Pacientes from './components/Pacientes.vue';
           pacientes.value.push({...pacienteAux});
         }
 
+        limpiarForm();
+    } 
+
+    const limpiarForm = ()=>{
         paciente.mascota = '';
         paciente.propietario = '';
         paciente.alta = ''; 
         paciente.sintomas = '';
         paciente.email = '';
         paciente.id = '';
-    } 
+    }
 
     const handleEdit = (id:string)=>{
       const findPaciente = pacientes.value.find(p => p.id === id) 
       if(!findPaciente) return;  
 
-      paciente.id = findPaciente.id;
-      paciente.mascota = findPaciente.mascota;
-      paciente.propietario = findPaciente.propietario;
-      paciente.alta = findPaciente.alta;
-      paciente.sintomas = findPaciente.sintomas;
-      paciente.email = findPaciente.email; 
+      Object.assign(paciente, findPaciente)
     }
     const handleDelete = (id:string)=>{
-      pacientes.value = pacientes.value.filter(paciente => paciente.id !== id)      
+      pacientes.value = pacientes.value.filter(paciente => paciente.id !== id)  
+      limpiarForm();    
     }
+ 
+    const isEditing = computed(()=>{
+      return paciente.id !== ''; 
+    }); 
+
 
  
 
@@ -97,6 +102,7 @@ import Pacientes from './components/Pacientes.vue';
         @submit="handleSubmit"
         :alerta="alerta"
         :showAlert="showAlert"
+        :isEditing="isEditing"
         />
       </div>
 
