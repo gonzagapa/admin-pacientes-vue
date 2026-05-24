@@ -3,14 +3,10 @@ import { reactive, ref } from 'vue';
 import Formulario from './components/Formulario.vue';
 import Header from './components/Header.vue'; 
 import type { AlertProps } from './components/Alerta.vue';
+import type { Paciente } from './types';
+import Pacientes from './components/Pacientes.vue';
 
-interface Paciente {
-        mascota:string, 
-        propietario:string, 
-        email:string, 
-        sintomas:string,
-        alta: string
-    }
+
 
     const paciente = reactive<Paciente>({
         mascota:'',
@@ -72,9 +68,11 @@ interface Paciente {
 
       <div class="">
         <h2 class="font-bold text-xl text-center mb-10">Listado de Pacientes</h2>
-        <div v-for="paciente in pacientes" class="rounded-md p-4 bg-white shadow-xl mb-3">
-          {{ paciente.email }}
-        </div>
+        
+       <Pacientes 
+       v-for="paciente in pacientes" 
+       :paciente="paciente"
+       />
       </div>
 
     </div>
