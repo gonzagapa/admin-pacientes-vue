@@ -9,6 +9,7 @@ import Pacientes from './components/Pacientes.vue';
 
 
     const paciente = reactive<Paciente>({
+        id:'',
         mascota:'',
         propietario:'',
         alta: '', 
@@ -25,23 +26,56 @@ import Pacientes from './components/Pacientes.vue';
     const handleSubmit = (event:SubmitEvent)=>{
         
         showAlert.value = true; 
-        if(Object.values(paciente).includes('')){
-           
-
+        const pacienteAux = { ...paciente, id: paciente.id || Date.now().toString() }; 
+        if(Object.values(pacienteAux).includes('')){
             alerta.mensaje = "Tienes un error en el formulario"
             alerta.tipo = "error";
+            setTimeout(() => {
+                alerta.mensaje = ""
+                alerta.tipo = "error"
+                showAlert.value = false
+            }, 3000);
             return;
         }
 
         alerta.tipo = "exito"; 
-        alerta.mensaje = "Todos los datos son correctos";
+        alerta.mensaje = "Cambios guardados correctamente";
+        setTimeout(() => {
+            alerta.mensaje = ""
+            alerta.tipo = "error"
+            showAlert.value = false
+        }, 3000);
 
-        pacientes.value.push({...paciente});
+        //Caso que ya exista el paciente 
+        const indexPaciente = pacientes.value.findIndex( paciente => paciente.id === pacienteAux.id); 
+        if(indexPaciente > -1){
+          pacientes.value[indexPaciente] = {...pacienteAux}
+        //Caso que no exista el pacienrte
+        }else{
+          pacientes.value.push({...pacienteAux});
+        }
+
         paciente.mascota = '';
         paciente.propietario = '';
         paciente.alta = ''; 
         paciente.sintomas = '';
         paciente.email = '';
+        paciente.id = '';
+    } 
+
+    const handleEdit = (id:string)=>{
+      const findPaciente = pacientes.value.find(p => p.id === id) 
+      if(!findPaciente) return;  
+
+      paciente.id = findPaciente.id;
+      paciente.mascota = findPaciente.mascota;
+      paciente.propietario = findPaciente.propietario;
+      paciente.alta = findPaciente.alta;
+      paciente.sintomas = findPaciente.sintomas;
+      paciente.email = findPaciente.email; 
+    }
+    const handleDelete = (id:string)=>{
+      pacientes.value = pacientes.value.filter(paciente => paciente.id !== id)      
     }
 
  
@@ -68,10 +102,11 @@ import Pacientes from './components/Pacientes.vue';
 
       <div class="">
         <h2 class="font-bold text-xl text-center mb-10">Listado de Pacientes</h2>
-        
        <Pacientes 
        v-for="paciente in pacientes" 
        :paciente="paciente"
+       @edit="handleEdit"
+       @delete="handleDelete"
        />
       </div>
 

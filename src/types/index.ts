@@ -3,5 +3,6 @@ export interface Paciente {
     propietario: string,
     email: string,
     sintomas: string,
-    alta: string
+    alta: string,
+    id: string
 }
