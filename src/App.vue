@@ -1,90 +1,20 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
 import Formulario from './components/Formulario.vue';
 import Header from './components/Header.vue'; 
-import type { AlertProps } from './components/Alerta.vue';
-import type { Paciente } from './types';
 import Pacientes from './components/Pacientes.vue';
+import { useApp } from './composables/useApp';
 
 
-
-    const paciente = reactive<Paciente>({
-        id:'',
-        mascota:'',
-        propietario:'',
-        alta: '', 
-        sintomas:'',
-        email:'',
-    }) 
-    const showAlert = ref(false);
-    const pacientes = ref<Paciente[]>([])
-    const alerta = reactive<AlertProps>({
-            mensaje:"",
-            tipo:"error"
-    }) 
-
-    const handleSubmit = ()=>{
-        
-        showAlert.value = true; 
-        const pacienteAux = { ...paciente, id: paciente.id || Date.now().toString() }; 
-        if(Object.values(pacienteAux).includes('')){
-            alerta.mensaje = "Tienes un error en el formulario"
-            alerta.tipo = "error";
-            setTimeout(() => {
-                alerta.mensaje = ""
-                alerta.tipo = "error"
-                showAlert.value = false
-            }, 3000);
-            return;
-        }
-
-        alerta.tipo = "exito"; 
-        alerta.mensaje = "Cambios guardados correctamente";
-        setTimeout(() => {
-            alerta.mensaje = ""
-            alerta.tipo = "error"
-            showAlert.value = false
-        }, 3000);
-
-        //Caso que ya exista el paciente 
-        const indexPaciente = pacientes.value.findIndex( paciente => paciente.id === pacienteAux.id); 
-        if(indexPaciente > -1){
-          pacientes.value[indexPaciente] = {...pacienteAux}
-        //Caso que no exista el pacienrte
-        }else{
-          pacientes.value.push({...pacienteAux});
-        }
-
-        limpiarForm();
-    } 
-
-    const limpiarForm = ()=>{
-        paciente.mascota = '';
-        paciente.propietario = '';
-        paciente.alta = ''; 
-        paciente.sintomas = '';
-        paciente.email = '';
-        paciente.id = '';
-    }
-
-    const handleEdit = (id:string)=>{
-      const findPaciente = pacientes.value.find(p => p.id === id) 
-      if(!findPaciente) return;  
-
-      Object.assign(paciente, findPaciente)
-    }
-    const handleDelete = (id:string)=>{
-      pacientes.value = pacientes.value.filter(paciente => paciente.id !== id)  
-      limpiarForm();    
-    }
- 
-    const isEditing = computed(()=>{
-      return paciente.id !== ''; 
-    }); 
-
+const {paciente,
+  pacientes,
+  showAlert,
+  alerta,
+  handleSubmit,
+  handleEdit,
+  handleDelete,
+  isEditing} = useApp()
 
  
-
 </script>
 
 <template>
