@@ -25,10 +25,12 @@ export const useApp = () => {
         }
 
         //Caso que ya exista el paciente 
+        //Modificar datos
         const indexPaciente = pacientes.value.findIndex(paciente => paciente.id === pacienteAux.id);
         if (indexPaciente > -1) {
             pacientes.value[indexPaciente] = { ...pacienteAux }
-            //Caso que no exista el pacienrte
+
+            //Caso que no exista el pacienrte, agregarlo
         } else {
             pacientes.value.push({ ...pacienteAux });
         }
