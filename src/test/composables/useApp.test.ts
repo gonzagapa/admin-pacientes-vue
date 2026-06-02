@@ -1,4 +1,4 @@
-import { useAlert } from "../../composables/useAlert"
+
 import { useApp } from "../../composables/useApp"
 
 const { handleAlertMock } = vi.hoisted(() => {
@@ -9,8 +9,8 @@ const { handleAlertMock } = vi.hoisted(() => {
 
 //TODO: Estudiar mock de imports y hoist
 //Hacemos un mock total sobre la implementacion de useAlert
-vi.mock('../../composables/useAlert', async (importOriginal) => {
-    const actual = await importOriginal<typeof import('../../composables/useAlert')>()
+vi.mock(import('../../composables/useAlert'), async (importOriginal) => {
+    const actual = await importOriginal()
     return {
         ...actual,
         useAlert: () => {
