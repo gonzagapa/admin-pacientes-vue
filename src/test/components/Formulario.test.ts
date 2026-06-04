@@ -46,6 +46,47 @@ describe('Formulario.vue', () => {
     });
 
     //TODO:Probar cuando la Alerta es visible (showAlert: true)
+    it('Debe ser visible la alerta cuando showAlert = true', () => {
+        const wrapper = createWrapper({
+            alerta: {
+                mensaje: 'Este mensaje debe verse',
+                tipo: 'error'
+            },
+            showAlert: true,
+        });
+
+        expect(wrapper.text()).toContain('Este mensaje debe verse');
+    })
+
     //TODO:Probar el estado de edición (isEditing: true)
-    //TODO:Probar la Reactividad y Enlace de Datos (v-model / defineModel)
+    it('Debe de ser visible el texto "Actualizar" cuando isEditing:true', () => {
+        const wrapper = createWrapper({
+            isEditing: true,
+        });
+
+        const button = wrapper.get('input[type=submit]');
+
+        expect(button.attributes('value')).toBe('Actualizar');
+        expect(button.classes()).toContain('bg-indigo-700')
+    })
+
+    //TODO:Probar la Reactividad y Enlace de Datos (v-model / defineModel) 
+    it('Probar la reactividad de algunos inputs del formulario', async () => {
+        const wrapper = createWrapper({
+            mascota: '',
+            propietario: '',
+            alta: '',
+            email: '',
+            sintomas: '',
+        });
+
+        await wrapper.find('#mascota').setValue('Yogui')
+        await wrapper.find('#email').setValue('gonzalo@gmail.com');
+
+        expect(wrapper.emitted('update:mascota')).not.toBeUndefined()
+        expect((wrapper.emitted('update:mascota') ?? [])[0]).toEqual(['Yogui'])
+
+        expect(wrapper.emitted('update:email')).not.toBeUndefined()
+        expect((wrapper.emitted('update:email') ?? [])[0]).toEqual(['gonzalo@gmail.com'])
+    })
 })
